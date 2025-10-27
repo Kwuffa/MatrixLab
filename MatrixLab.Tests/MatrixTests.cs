@@ -45,25 +45,28 @@ namespace MatrixLab.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void Constructor_ZeroDimensions_ThrowsArgumentException()
         // Сценарій: Спроба створити матрицю з розміром 0x5
         // Очікування: Конструктор кидає ArgumentException
         {
-            new Matrix(0, 5);
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                new Matrix(0, 5);
+            });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void Constructor_NegativeDimensions_ThrowsArgumentException()
         // Сценарій: Спроба створити матрицю з розміром 3x(-1)
         // Очікування: Конструктор кидає ArgumentException
         {
-            new Matrix(3, -1);
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                new Matrix(3, -1);
+            });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_FromNullArray_ThrowsArgumentNullException()
         // Сценарій: Спроба створити матрицю з null-масиву
         // Очікування: Конструктор кидає ArgumentNullException
@@ -71,8 +74,11 @@ namespace MatrixLab.Tests
             // Arrange
             double[,] data = null;
 
-            // Act
-            new Matrix(data);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                new Matrix(data);
+            });
         }
 
         [TestMethod]
@@ -93,7 +99,6 @@ namespace MatrixLab.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void CopyConstructor_NullOriginal_ThrowsArgumentNullException()
         // Сценарій: Спроба скопіювати null-матрицю
         // Очікування: Конструктор кидає ArgumentNullException
@@ -101,8 +106,11 @@ namespace MatrixLab.Tests
             // Arrange
             Matrix originalMatrix = null;
 
-            // Act
-            new Matrix(originalMatrix);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                new Matrix(originalMatrix);
+            });
         }
 
         // 2. Тести для індексатора (мають пройти, бо реалізован)
@@ -124,27 +132,33 @@ namespace MatrixLab.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void IndexerGet_RowOutOfRange_ThrowsArgumentOutOfRangeException()
         // Сценарій: Спроба отримати значення з рядка 99 (для матриці 3x3)
         // Очікування: Кидає ArgumentOutOfRangeException
         {
             // Arrange
             var m = new Matrix(3, 3);
-            // Act
-            double value = m[99, 1];
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            {
+                double value = m[99, 1];
+            });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void IndexerSet_ColOutOfRange_ThrowsArgumentOutOfRangeException()
         // Сценарій: Спроба записати значення у стовпець -1
         // Очікування: Кидає ArgumentOutOfRangeException
         {
             // Arrange
             var m = new Matrix(3, 3);
-            // Act
-            m[1, -1] = 10;
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            {
+                m[1, -1] = 10;
+            });
         }
 
         // Тести для допоміжних методів - мають пройти
@@ -212,7 +226,6 @@ namespace MatrixLab.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void Add_MismatchedDimensions_ThrowsArgumentException()
         // Сценарій: Спроба додати матриці 2x2 та 3x3
         // Очікування: Кидає ArgumentException
@@ -221,12 +234,14 @@ namespace MatrixLab.Tests
             var m1 = new Matrix(2, 2);
             var m2 = new Matrix(3, 3);
 
-            // Act
-            m1.Add(m2);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                m1.Add(m2);
+            });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Add_NullMatrix_ThrowsArgumentNullException()
         // Сценарій: Спроба додати null до існуючої матриці
         // Очікування: Кидає ArgumentNullException
@@ -235,8 +250,11 @@ namespace MatrixLab.Tests
             var m1 = new Matrix(2, 2);
             Matrix m2 = null;
 
-            // Act
-            m1.Add(m2);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                m1.Add(m2);
+            });
         }
 
         // Тести для Multiply (scalar)
@@ -322,7 +340,6 @@ namespace MatrixLab.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void Multiply_InvalidDimensions_ThrowsArgumentException()
         // Сценарій: Спроба помножити матрицю 3x2 на 3x3
         // Очікування: Кидає ArgumentException
@@ -331,12 +348,14 @@ namespace MatrixLab.Tests
             var m1 = new Matrix(3, 2);
             var m2 = new Matrix(3, 3);
 
-            // Act
-            m1.Multiply(m2);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                m1.Multiply(m2);
+            });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Multiply_NullMatrix_ThrowsArgumentNullException()
         // Сценарій: Спроба помножити матрицю на null
         // Очікування: Кидає ArgumentNullException
@@ -345,14 +364,16 @@ namespace MatrixLab.Tests
             var m1 = new Matrix(2, 2);
             Matrix m2 = null;
 
-            // Act
-            m1.Multiply(m2);
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                m1.Multiply(m2);
+            });
         }
 
         // Тести для GetDeterminant
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void GetDeterminant_NonSquareMatrix_ThrowsInvalidOperationException()
         // Сценарій: Спроба знайти визначник для матриці 2x3
         // Очікування: Кидає InvalidOperationException
@@ -360,8 +381,11 @@ namespace MatrixLab.Tests
             // Arrange
             var m = new Matrix(2, 3);
 
-            // Act
-            m.GetDeterminant();
+            // Act & Assert
+            Assert.ThrowsException<InvalidOperationException>(() =>
+            {
+                m.GetDeterminant();
+            });
         }
 
         [TestMethod]
