@@ -7,8 +7,7 @@ namespace MatrixLab.Tests
     [TestClass]
     public class MatrixTests
     {
-        // Тести для Конструкторів та Властивостей
-        // Ці тести мають пройти, бо реалізовані конструктори
+        // Тести для конструкторів та властивостей (мають пройти, бо реалізовані конструктори)
 
         [TestMethod]
         public void Constructor_ValidDimensions_CreatesMatrix()
@@ -51,7 +50,6 @@ namespace MatrixLab.Tests
         // Сценарій: Спроба створити матрицю з розміром 0x5
         // Очікування: Конструктор кидає ArgumentException
         {
-            // Arrange, Act, Assert
             new Matrix(0, 5);
         }
 
@@ -61,7 +59,6 @@ namespace MatrixLab.Tests
         // Сценарій: Спроба створити матрицю з розміром 3x(-1)
         // Очікування: Конструктор кидає ArgumentException
         {
-            // Arrange, Act, Assert
             new Matrix(3, -1);
         }
 
@@ -71,8 +68,11 @@ namespace MatrixLab.Tests
         // Сценарій: Спроба створити матрицю з null-масиву
         // Очікування: Конструктор кидає ArgumentNullException
         {
-            // Arrange, Act, Assert
-            new Matrix((double[,])null);
+            // Arrange
+            double[,] data = null;
+
+            // Act
+            new Matrix(data);
         }
 
         [TestMethod]
@@ -98,12 +98,14 @@ namespace MatrixLab.Tests
         // Сценарій: Спроба скопіювати null-матрицю
         // Очікування: Конструктор кидає ArgumentNullException
         {
-            // Arrange, Act, Assert
-            new Matrix((Matrix)null);
+            // Arrange
+            Matrix originalMatrix = null;
+
+            // Act
+            new Matrix(originalMatrix);
         }
 
-        // --- 2. Тести для Індексатора ---
-        // Ці тести мають пройти, бо реалізован індексатор
+        // 2. Тести для індексатора (мають пройти, бо реалізован)
 
         [TestMethod]
         public void Indexer_SetAndGet_ValidIndices_WorksCorrectly()
@@ -145,8 +147,7 @@ namespace MatrixLab.Tests
             m[1, -1] = 10;
         }
 
-        // Тести для Допоміжних Методів (Equals, ToString)
-        // Ці тести мають пройти
+        // Тести для допоміжних методів - мають пройти
 
         [TestMethod]
         public void Equals_TwoIdenticalMatrices_ReturnsTrue()
@@ -190,14 +191,9 @@ namespace MatrixLab.Tests
             Assert.IsFalse(result);
         }
 
-        // =================================================================
-        // Тести для TDD Методів (Мають Провалитися!)
-        // Це тести для методів Add, Multiply, GetDeterminant
-        // Вони будуть ЧЕРВОНИМИ, бо методи кидають NotImplementedException
-        // =================================================================
+        // Тести для методів (мають провалитися на початковому етапі)
 
         // Тести для Add
-
         [TestMethod]
         public void Add_Two2x2Matrices_ReturnsCorrectSum()
         // Сценарій: Додавання двох матриць 2x2
@@ -232,12 +228,12 @@ namespace MatrixLab.Tests
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Add_NullMatrix_ThrowsArgumentNullException()
-        // Сценарій: Спроба додати "null" до існуючої матриці
+        // Сценарій: Спроба додати null до існуючої матриці
         // Очікування: Кидає ArgumentNullException
         {
             // Arrange
             var m1 = new Matrix(2, 2);
-            Matrix m2 = null; // Створюємо null-посилання
+            Matrix m2 = null;
 
             // Act
             m1.Add(m2);
@@ -263,8 +259,8 @@ namespace MatrixLab.Tests
 
         [TestMethod]
         public void Multiply_MatrixByZero_ReturnsZeroMatrix()
-        // Сценарій: Множення матриці на скаляр 0
-        // Очікування: Повертає матрицю того ж розміру, заповнену нулями
+        // Сценарій: Множення матриці на 0
+        // Очікування: Повертає матрицю того ж розміру заповнену нулями
         {
             // Arrange
             var m = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
@@ -285,8 +281,10 @@ namespace MatrixLab.Tests
         // Очікування: Повертає коректний добуток
         {
             // Arrange
-            var m1 = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
-            var m2 = new Matrix(new double[,] { { 5, 6 }, { 7, 8 } });
+            var m1 = new Matrix(new double[,] { { 1, 2 },
+                                                { 3, 4 } });
+            var m2 = new Matrix(new double[,] { { 5, 6 }, 
+                                                { 7, 8 } });
             // (1*5 + 2*7) = 19 | (1*6 + 2*8) = 22
             // (3*5 + 4*7) = 43 | (3*6 + 4*8) = 50
             var expected = new Matrix(new double[,] { { 19, 22 }, { 43, 50 } });
@@ -340,7 +338,7 @@ namespace MatrixLab.Tests
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Multiply_NullMatrix_ThrowsArgumentNullException()
-        // Сценарій: Спроба помножити матрицю на "null"
+        // Сценарій: Спроба помножити матрицю на null
         // Очікування: Кидає ArgumentNullException
         {
             // Arrange

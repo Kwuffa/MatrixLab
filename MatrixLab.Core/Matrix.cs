@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Text; // Потрібен для StringBuilder у ToString
+using System.Text;
 
 namespace MatrixLab.Core
 {
     public class Matrix
     {
-        // Дані класу (приватні поля)
-
+        // Дані класу
         private readonly int _rows;
         private readonly int _cols;
-        private readonly double[,] _data; // Масив для зберігання даних
+        private readonly double[,] _data;
 
         // Властивості класу
-
         public int Rows => _rows; // Скорочений запис для { get { return _rows; } }
         public int Cols => _cols;
 
-        // Індексатор що дозволяє звертатися до елементів матриці як до масиву: matrix[i, j]
+        // Індексатор що дозволяє звертатися до елементів матриці як до масиву
         public double this[int row, int col]
         {
             get
@@ -24,7 +22,7 @@ namespace MatrixLab.Core
                 // Спочатку перевіряємо індекси
                 ValidateIndices(row, col);
 
-                // Якщо все добре, повертаємо значення
+                // Якщо все добре повертаємо значення
                 return _data[row, col];
             }
             set
@@ -35,10 +33,6 @@ namespace MatrixLab.Core
         }
 
         // Конструктори
-
-        /// <summary>
-        /// Створює матрицю заданого розміру, заповнену нулями.
-        /// </summary>
         public Matrix(int rows, int cols)
         {
             if (rows <= 0 || cols <= 0)
@@ -49,9 +43,6 @@ namespace MatrixLab.Core
             _data = new double[rows, cols]; // За замовчуванням заповнюється нулями
         }
 
-        /// <summary>
-        /// Створює матрицю на основі існуючого 2D-масиву.
-        /// </summary>
         public Matrix(double[,] data)
         {
             if (data == null)
@@ -65,10 +56,6 @@ namespace MatrixLab.Core
             Array.Copy(data, _data, data.Length);
         }
 
-        /// <summary>
-        /// Конструктор копіювання.
-        /// Створює глибоку, незалежну копію іншої матриці.
-        /// </summary>
         public Matrix(Matrix other)
         {
             if (other == null)
@@ -78,12 +65,11 @@ namespace MatrixLab.Core
             _cols = other.Cols;
             _data = new double[_rows, _cols];
 
-            // Виконуємо глибоке копіювання даних, щоб матриці були незалежними одна від одної
+            // Глибоке копіювання даних, щоб матриці були незалежними одна від одної
             Array.Copy(other._data, this._data, other._data.Length);
         }
 
-        // Допоміжні методи (Equals, GetHashCode, ToString)
-
+        // Допоміжні методи
         public override bool Equals(object obj)
         {
             if (!(obj is Matrix other))
@@ -104,15 +90,14 @@ namespace MatrixLab.Core
         }
         public override int GetHashCode()
         {
-            unchecked // Дозволяємо арифметичне переповнення, це нормально для хеш-кодів
+            unchecked // Дозволяємо арифметичне переповнення
             {
-                int hash = 17; // Початкове просте число
+                int hash = 17;
 
-                // Додаємо поля, від яких залежить Equals
+                // Додаємо поля від яких залежить Equals
                 hash = hash * 31 + _rows.GetHashCode();
                 hash = hash * 31 + _cols.GetHashCode();
 
-                // Додаємо всі елементи
                 for (int i = 0; i < this.Rows; i++)
                 {
                     for (int j = 0; j < this.Cols; j++)
@@ -126,32 +111,25 @@ namespace MatrixLab.Core
 
         public override string ToString()
         {
-            // Створюємо порожній контейнер для майбутнього рядка
+            // Створюємо порожній контейнер
             var sb = new StringBuilder();
 
-            // Починаємо цикл по кожному РЯДКУ матриці
             for (int i = 0; i < Rows; i++)
             {
-                // На початку кожного рядка додаємо в кінець контейнера "[ "
                 sb.Append("[ ");
 
-                // Запускаємо цикл по кожному СТОВПЦЮ всередині поточного рядка
                 for (int j = 0; j < Cols; j++)
                 {
-                    // Додаємо відформатоване число
                     sb.AppendFormat("{0,8:F2} ", this[i, j]);
                 }
 
-                // Коли рядок закінчився, додаємо "]" і символ "нового рядка", щоб наступний рядок почався з нової лінії
                 sb.AppendLine("]");
             }
 
-            // Коли всі рядки оброблені, перетворюємо наш контейнер StringBuilder на звичайний string
             return sb.ToString();
         }
 
         // Функції класу
-
         public Matrix Add(Matrix other)
         {
             if (other == null)
@@ -196,17 +174,15 @@ namespace MatrixLab.Core
                 throw new ArgumentException("Кількість стовпців першої матриці " +
                     "має дорівнювати кількості рядків другої матриці для множення.");
 
-            // Розмір результату буде (this.Rows x other.Cols)
             var result = new Matrix(this.Rows, other.Cols);
 
-            // Алгоритм множення
-            // i - для проходу по РЯДКАХ першої матриці (і рядках результату)
+            // i для проходу по РЯДКАХ першої матриці
             for (int i = 0; i < result.Rows; i++)
             {
-                // j - для проходу по СТОВПЦЯХ другої матриці (і стовпцях результату)
+                // j для проходу по СТОВПЦЯХ другої матриці
                 for (int j = 0; j < result.Cols; j++)
                 {
-                    // k - для "внутрішнього" циклу (прохід по стовпцях 'this' і рядках 'other')
+                    // k для внутрішнього циклу
                     double sum = 0;
                     for (int k = 0; k < this.Cols; k++)
                     {
@@ -220,7 +196,6 @@ namespace MatrixLab.Core
         }
         public double GetDeterminant()
         {
-            // Перевірка на квадратність
             if (this.Rows != this.Cols)
                 throw new InvalidOperationException("Визначник можна знайти лише для квадратної матриці.");
 
@@ -236,8 +211,6 @@ namespace MatrixLab.Core
             }
 
             // Рекурсивний випадок: Матриця 3x3 або більше
-            // Використовуємо розклад по першому рядку (i = 0)
-
             double determinant = 0;
 
             for (int j = 0; j < this.Cols; j++)
@@ -245,7 +218,7 @@ namespace MatrixLab.Core
                 // Отримуємо мінор (матриця без 0-го рядка та j-го стовпця)
                 Matrix minor = CreateMinor(0, j);
 
-                // Визначаємо знак (алгебраїчне доповнення)
+                // Визначаємо знак
                 double sign = (j % 2 == 0) ? 1 : -1;
 
                 // Додаємо до суми: Знак * Елемент * Визначник_Мінора
@@ -256,9 +229,6 @@ namespace MatrixLab.Core
         }
 
         // Приватні допоміжні методи
-        /// <summary>
-        /// Приватний метод для перевірки, чи індекси не виходять за межі матриці.
-        /// </summary>
         private void ValidateIndices(int row, int col)
         {
             if (row < 0 || row >= _rows)
@@ -274,9 +244,6 @@ namespace MatrixLab.Core
             }
         }
 
-        /// <summary>
-        /// Створює мінор - матрицю N-1 x N-1, видаливши вказаний рядок та стовпець.
-        /// </summary>
         private Matrix CreateMinor(int rowToRemove, int colToRemove)
         {
             var minor = new Matrix(this.Rows - 1, this.Cols - 1);
@@ -295,7 +262,6 @@ namespace MatrixLab.Core
                     if (j == colToRemove)
                         continue;
 
-                    // Копіюємо значення в нову матрицю
                     minor[minorRow, minorCol] = this[i, j];
                     minorCol++;
                 }
